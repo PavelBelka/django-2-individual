@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" charset="UTF-8" />
+    <title>Товары</title>
+    <style>
+            div{
+                margin: 10px;
+                border: 1px solid #222;
+            }
+            #header{
+                height: 120px;
+                background-color: #00BFFF;
+                padding-top:0px
+            }
+            .grid-container{
+                    display:grid;
+                    grid-template-columns: repeat(6, 240px) ;
+                    grid-template-rows: repeat(6, 14em);
+                    grid-column-gap: 10px;
+                    grid-row-gap: 10px;
+            }
+            .grid-item{
+                box-sizing: border-box;
+                text-align: center;
+                font-size: 1.1em;
+                padding: 1.5em;
+            }
+            #footer{
+                height: 80px;
+                background-color: #ccc;
+            }
+    </style>
+</head>
+<body>
+    {% block content %}
+        <div id = "header">
+            <h2>Сайт магазина автомомбилей</h2>
+            <p>Добро пожаловать в Автомагазин, {% if user.is_authenticated %}{{user.username}}{% else %}авторизуйтесь{% endif %}</p>
+            {% if user.is_authenticated %}
+                <a href = "{% url 'mypurchase' %}">Мои покупки</a> /
+                <a href = "{% url 'logout' %}">Выйти</a>
+            {% else %}
+                <a href = "{% url 'login' %}">Авторизация</a> /
+                <a href = "{% url 'register' %}">Регистрация</a>
+            {% endif %}
+        </div>
+    {% endblock %}
+    <h3>Модельный ряд</h3>
+    <div class="grid-container">
+        {% for p in cars %}
+            <div class="grid-item">
+                <p>{{ p.manufacturer }}</p>
+                <p>{{ p.name }}</p>
+                <p>Всего в продаже {{p.count}}</p>
+                {% if user.is_authenticated %}
+                    <p><a href="/configurator/{{ p.id }}/{{0}}/{{0}}">В конфигуратор</a></p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

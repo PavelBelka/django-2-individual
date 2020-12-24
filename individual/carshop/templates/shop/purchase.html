@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои покупки</title>
+</head>
+<body>
+    <div>
+        <h2>Мои покупки</h2>
+        <table>
+            <tr>
+                <td><p>Автомомбиль</p></td>
+                <td><p>Цена</p></td>
+                <td><p>Дата</p></td>
+            </tr>
+            {% for p in purchase %}
+                <tr>
+                    <td><p>{{ p.car.manufacturer }} {{ p.car.name }}</p></td>
+                    <td><p>{{ p.price}}</p></td>
+                    <td><p>{{ p.date }}</p></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <a href = "{% url 'index' %}">Назад</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" charset="UTF-8" />
+    <title>Товары</title>
+    <style>
+            div{
+                margin: 10px;
+                border: 1px solid #222;
+            }
+            #header{
+                height: 120px;
+                background-color: #00BFFF;
+                padding-top:0px
+            }
+            .grid-container{
+                    display:grid;
+                    grid-template-columns: repeat(6, 200px) ;
+                    grid-template-rows: repeat(6, 22em);
+                    grid-column-gap: 10px;
+                    grid-row-gap: 10px;
+            }
+            .grid-item{
+                box-sizing: border-box;
+                text-align: center;
+                font-size: 1.1em;
+                padding: 1.5em;
+            }
+            #footer{
+                height: 80px;
+                background-color: #ccc;
+            }
+    </style>
+</head>
+<body>
+    {% block content %}
+        <div id = "header">
+            <h2>Сайт магазина автомомбилей</h2>
+            <p>Добро пожаловать в Автомагазин, {% if user.is_authenticated %}{{user.username}}{% else %}авторизуйтесь{% endif %}</p>
+            {% if user.is_authenticated %}
+                <a href = "{% url 'mypurchase' %}">Мои покупки</a> /
+                <a href = "{% url 'logout' %}">Выйти</a>
+            {% else %}
+                <a href = "{% url 'login' %}">Авторизация</a> /
+                <a href = "{% url 'register' %}">Регистрация</a>
+            {% endif %}
+        </div>
+        <h3>Конфигуратор {{Names.manufacturer}} {{Names.name}}</h3>
+        <table>
+            <tr>
+                <td>
+                    {% if Steps == 1 %}
+                        <p>Выберите комплектацию.</p>
+                    {% elif Steps == 2 %}
+                        <p>Выберите двигатель.</p>
+                    {% elif Steps == 3 %}
+                        <p>Выберите трансмиссию.</p>
+                    {% elif Steps == 4 %}
+                        <p>Итого</p>
+                    {% endif %}
+                </td>
+                <td>
+                    <p>Сумма: {{Cost}} </p>
+                </td>
+                <td>
+                    {% if Steps == 4 %}
+                        <p><a href="/buy/{{ car_id }}/{{Cost}}">Купить</a></p>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    {% endblock %}
+    <div class="grid-container">
+        {% for p in Compl %}
+            <div class="grid-item">
+                {% if Steps == 1 %}
+                    <p>{{ p.name }}</p>
+                    <p>{{ p.description }}</p>
+                {% elif Steps == 2 %}
+                    <p>{{ p.name }}</p>
+                    <p>Мощность: {{ p.power }}</p>
+                    <p>Крутящий момент: {{ p.force }}</p>
+                {% elif Steps == 3 %}
+                    <p>{{ p.name }}</p>
+                    <p>Передач: {{ p.gear }}</p>
+                    <p>Привод: {{ p.drive }}</p>
+                {% endif %}
+                <p>Цена {{ p.cost }}</p>
+                {% if user.is_authenticated %}
+                    <p><a href="/configurator/{{ car_id }}/{{Steps}}/{{p.id}}">Выбрать</a></p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
